@@ -514,6 +514,12 @@ NACL - same as above but this is not stateful and works at subnet level
 a VPN Gateway is assigned or attached to a subnet in the subnet
 will not work with a different subnet in the same CIDR if they don't have a VPN gateway . obvoiusly can use the jump host logic
 
+NAT gateway = a machine that will basically NAT your priviate IP . Does something like what your home internet router does (it does PAT)
+Since it is doing PAT , no can make a connection to your private machine or resources 
+
+
+public NAT gateway - PAT
+private NAT gateway - for S2S VPN in case your IP overlaps with your partner
 
 
 
