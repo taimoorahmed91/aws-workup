@@ -522,8 +522,32 @@ public NAT gateway - PAT
 private NAT gateway - for S2S VPN in case your IP overlaps with your partner
 
 
+Interface Endpoint - elastic network interface , creates a network interface dedicatedly with that service. Traffic does not go to gateway , exisits the newly created interface
+Gateway Endpoint - entry in a route table to access services outside
+Gateway load balancer endpoint - routes traffic to a GLB
 
 
+VPC Peering
+For communication between two different VPC
+Limitation 
+1) overlapping CIDR
+2) Transitive peering (A is peer to B and B is peer to C) A will not communicate to C
+3) edge to edge (gateway communication will not use the peer link)
+
+
+Reachability Analyzer : static configuration analysis tool , that tells you the hop by hop by Detailed
+VPC Traffic monitoring : basically your mirroring to use wireshark later
+
+Transit Gateway: Basically the solutuin to the Limitation of VPC peering. But not limited to that , you can use it as a randevou point for your VPN connections as well
+Network Firewall: Amazon's own firewall , can do IPS and IDS as well
+
+
+Max VPC per region = 5
+max 4 secondary IP per VPC
+200 subnet per amazon VPC
+5 elastic IP address per AWS account per region
+10 hardware connection per amazon VPC
+ 
 
 
 
