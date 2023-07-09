@@ -484,6 +484,35 @@ VPC - Peering
 communication between two different VPC (this is not depenedent of region or accounts)
 Intra region is not paid everything else is 
 
+VPN = Site to SITE or dialup VPN
+amazon can provide managed gateway as well but this is paid
+
+VPC Flow logs - need to be enabled is not default 
+somehting that gives you logs of what is happening on the network 
+
+CIDR is valid for a  Region  (min is /28 and max is a /16)
+Availability zones have Subnets for that region
+Subnets can not span to a different Availability zones
+to move a machine to a different AZ you would need to move it to a different VPC as well
+
+Route table is not for a subnet but the entire CIRD together
+igw-id = internet gateway ID
+vgw-id = virtual private gateway ID
+
+Bestian host = Jump server in amazon
+Every subnet has 5 IPs reseved
+1) network address  10.0.0.0/24
+2) The first IP is reserved for the gateway 10.0.0.1/24
+3) The second IP for the DNS is reserved 10.0.0.2/24
+4) Reserved for future use 10.0.0.3/24
+5) broadcast address 10.0.0.255/24
+
+
+Security Group = is attached to a resource and is valid for instance based. Basically your stateful ACL for your EC2. Has implicit deny at the end which is hidden
+NACL - same as above but this is not stateful and works at subnet level
+
+a VPN Gateway is assigned or attached to a subnet in the subnet
+will not work with a different subnet in the same CIDR if they don't have a VPN gateway . obvoiusly can use the jump host logic
 
 
 
