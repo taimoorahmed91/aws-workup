@@ -1,0 +1,491 @@
+17 June 2023
+
+Live training Videos -> 41st Batch .
+AWS Students -> Slides -> AWS 3in1 Course
+
+<>
+Trusted Advisor (Consulting)
+Customized Cloud Expert . Best practse for saving money , improving performace and closing gaps.
+Recommends only (On by default)
+5 domain (to be advised on) 
+(Cost optimization)
+Performance
+security
+Fault tolerance
+Serivce limit
+
+Limited core checks under free tier
+Can be configured to notify via emails on reports
+consults on security gaps on new deployments 
+IAM can be used to see which user has access to which notification or security check
+
+Obviously recommendations can be exported and van be fetched through API as well. 
+
+
+Core Checks (basic plan / free plan)
+
+Service Limit : default limit of a specific service e.g 20 EC2 machines in a specific DC
+Security: S3 Bucket permission (which of the buckets are public) <> Security Groups (if anything is un-restricted) <> IAM Use case (best practises) <> MFA on root account <> EBS Public Snapshot (drive of the EC2 machines) if any of those are public <> RDS public snapshots
+
+
+Full Trusted Advisor Benefits (Enterprise or Buisness)
+https://aws.amazon.com/premiumsupport/plans/
+
+<>
+Cloud Trail (more like a trail of action of 90 days on the dashboard) <> On by default
+History of event activity on the AWS account
+including AWS management consile , through CLI or even the SDK .
+Basically a configuration change audit 
+Can be store in a S3 bucket (this is a manual process -> make a trail to save it in the S3 bucket)
+In the above trail (ths is encrypted by SSE server side encryption) -> by default
+Can use AWS KMS as well for encryption 
+
+Log file integrity validation (this is a feature that you enable on the cloud trail)
+validates if the data changed was modified or not
+
+DATA Events (data plane) <> Additional Cost (you can see those in the trail you create)
+The actual activity on the object or resourse itself . Change /update delete , upload , download etc e.g RDP (SSH) what is happening in the resource itself
+
+
+Management Event (control plane) (this is something that you would see on the trail)
+Account logins and object creations not anything with respect to resource. Account level activity
+
+
+Cloud Trail insights (this is something that you would see on the trail)
+identify unusual activity that is on a delta from your usual norm
+
+Multi-region Configuration 
+in relaity cloud trail is your regional service but you can configure AWS cloud trail to deliver log files from multiple region to a signle S3 bucket
+
+AWS LAMBDA,
+To triger an action from something in the cloud trail
+
+AWS cloud watch
+
+
+Prcing Example
+90 days van be viewed for free
+first trail creation is free but if you save it in S3 , S3 is not free
+
+
+<>
+IAM (free resource)
+Identity and access management (AWS resources)
+basically your AAA service
+Identities and permsissions assigned to that resource (this is in a JSON file sitting somewhere)
+
+Root User: the parent account from which it was registerd (this always have everything super admin)
+IAM user : the user created under a account identity or account alias
+
+Shared access to the same AWS parent account
+can be used with MFA (better to use for privilidged users)
+analyze access (basically the accounting for the IAM)
+
+Identity Federation
+AWS can also use an IDP for logins (basically an SSO)
+Identity federation is a mechanism that allows you to establish trust and enable single sign-on (SSO) between different systems or services.
+
+Cross account access (need to study)
+
+Policies:
+identity based policy: policy to a user or a group (inline policy: a policy that exists with a user, if the user gets deleted the policy gets deleted)
+resource based policy: polciy that can be assinged to a resource (just like an inline , it gets deleted with the resource)
+permission boundries: defines the maximum boundry of access , if any access given to a user to not mentioned in the boundry will not work
+Organization SCP (service control policy): (need to study)
+
+By using SCPs, you can define a hierarchy of permissions and constraints across your organization's AWS accounts. This helps you enforce security, compliance, and governance policies consistently across all accounts.
+
+In summary, an SCP is a way to control what actions and services are allowed within your AWS organization's accounts. It ensures that everyone follows the rules and guidelines you set up, just like a parent managing their children's activities.
+
+
+BEST practises
+
+user: create individual user
+groups: manager permission with groups
+permission: grant least privilidge
+auditng : turn on cloud trail
+password: configure strong password
+MFA: support MFA
+roles: use IAM roles for amazon EC2 instance
+sharing: use IAM role to share access
+rotate: rotate security credentials regularly
+condition: restricit privilidge access with conditions 
+root: reduce or remove use of root
+
+IAM roles and groups (Need to study)
+
+
+Create a challenge password. You will need to verbally provide this password to the CA Administrator in order to revoke your certificate.
+
+
+
+
+If I do not create a trail, can I still see the DATA Events and MGMT events  where can I see the ?
+In identity federation , we could use an IDP to get temp access in AWS network? define temporary , can it not be just normal access? - Slide 6
+
+Questions:
+Difference between pre-signed URL and public URL
+To an S3, folders don't really exist or do they?
+what are object keys and prefix?
+
+
+
+<> S3 (simple storage service)
+
+This is a object based storage
+This is where you save your objects like your files and stuff into a resource called Bucket (folder)
+This is a Global service but your region gets created in a region but you can still view them in all other regions in the S3
+Data format is ir-relevant . File sizes are 0 Byte to 5 TB. 
+Files with more than 5GB or 100 MB as per Rafay in size must use "multi-part upload"
+
+objects can have metadata , which would be a list of text key/value pairs - system or user metadata)
+
+
+
+All objects in S3 have keys that would be it's path from the S3 bucket
+e.g s3://my-bucket/my_folder1/another_folder/my_file.txt
+
+Department: Eng.
+
+
+key = prefix + object name
+where your folder directories are your prefix e.g here my_folder1/another_folder/
+
+
+Charges on S3 are for Storage, Data Transfer and Acceleration (This is a sepearate feature where you can file to the edge location)
+S3 Transfer Acceleration = When you upload or download a file, your data is automatically routed through the nearest edge location.
+
+S3 bucket name must be unique globally , meaning I can not have a bucket-name that has the same name as somewhere else in the world
+
+Storage Classes (diffrentiated by cost and access)
+1) S3 Standard - for your normal BAU (buisness as usual) usage (default) - most expensive as well - No retreival fees. On back end it is backed up in at least 3-AZ
+2) S3 Standard IA (in-frequent access) - On back end it is backed up in at least 3-AZ - slightly cheaper - has a retreival fee (slightly less frequent data but instantly available)
+3) S3 One Zone - infrequent access - Exactly as you Standard IS but your data stored is NOT backed up to any place 
+4) S3 Glacier (Archive)
+
+In frequent Access Tier
+S3 Standard IA
+S3 One Zone - infrequent access
+
+Archive Tier
+Glacier Instant Retrieval: 
+lower cost but highest in archive (glacier) with long lived data rarely accesses , retival in miliseconds.
+
+Glacrier Flexible Retrival 
+cheaper than above but can be retrieved in Expedited (1-5 minutes) - Standard (3-5 Hours) - Bulk (5 - 12 Hours)
+Provisioned capacity unit (fixed up-front fee to expedire retrievals ) - need to study - really study (Need to confirm with Rafay)
+
+
+Glacier Deep Archive for years of Standard
+storage (within 12 hours)
+Bulk (up to 48 hours)
+
+
+Unknown or Changing Access
+
+S3 Intellegient Tiering
+Optimizes cost by automatically moving data to the most cost effective access tier
+Does this by monitoring your frequent access tier for 30 consecutive days
+There is a per object monitoring fees
+How does it move objects back to frequent access when it becoes more accessible?
+S3 Intelligent-Tiering is a storage class in AWS S3 that automatically optimizes the cost and performance of storing your data by moving objects between frequent access and infrequent access tiers based on their usage patterns.
+
+
+It has 3 tiers in consideration
+1: optimized for frequent access (default)
+2: low cost tier optimized for infrequent access (zero request in last 30 days)
+3: Archive for rare access (zero request in last 90 days from IA)
+
+
+
+
+S3 outpost 
+storage on premisis
+for low latency to on-prem systems , basically you get a rack that you get deploy on your own DC and then it connects directly to the cloud
+This is not at all different to the cloud
+best of local data processing, low latency 
+
+
+Storage management
+S3 - Batch Operation (need to study)
+S3 Batch Operations is a feature provided by Amazon S3 that allows you to perform actions on a large number of files in a single request, saving time and effort. It simplifies the management and processing of a large-scale file operations in S3.
+
+
+S3 Versioning
+creates  a version of the file everytime the file is modified
+e.g so you changed it to 10 times so now you would have 11 different files
+Disabling (suspending) versioning does not delete your previous versions
+Delete Marker (need to study)
+Any file that is not versioned prior to enabling versioning will have the version "null"
+Deleting the latest version will make the second last be the current version of the file
+
+same key overwrite will change the version of the file.
+just like you do in git
+
+In Amazon S3 versioning, when you delete a file, instead of immediately erasing it completely, a "delete marker" is created. Think of it like a signpost that shows the file has been deleted.
+
+Yes, you can think of deleting a delete marker in Amazon S3 versioning as similar to restoring an item from the recycle bin on a Windows PC.
+
+Yes, deleting a file in Amazon S3 when it already has a delete marker associated with it will result in the complete and permanent deletion of that object but but if you have a previous version and your delete marker is on the latest version in that case it would restore the second last version into the bucket. Because in reality the previous version was suppressed by the delete marker on the latest version
+
+
+Multi Factor authentication Delete
+helps protect your data stored in an Amazon S3 bucket from accidental deletion.
+you also need a special code from a physical device called an MFA device.
+you need MFA for deletion of file as well in S3. MFA delete is a security feature that requires users to enter a one-time passcode from their MFA device in order to delete a versioned object in an S3 bucket. (Need to confirm with Rafay)
+
+
+S3 object Lock (WORM Logic)
+Object in the S3 would be locked , write once , read many
+
+Replication
+Only new files are repliced after enabling replication
+options : use batch replication (this will replicate existing objects and objects that failed replication)
+Delete markers can be replicated : optional
+deletion with a version ID is not replicated
+Replication is not chained.
+E.g if bucket 1 has replication into bucket 2 which is replicated into backet 3.
+
+
+
+S3 CRR (cross region replication) - use case fr compliance and replication accross accounts)
+this allows your data to be replicated in other regions as well , basically replicats all your stuff and keeps a copy in another region.
+Replication is asynchronous and versioning must be enabled.
+
+
+
+When you have a file and you enable CRR , now you have a total of 6 copies of it?
+
+No, if you have a file in S3 and enable CRR, there will not be 6 copies of the file on AWS. CRR only creates two copies of the file, one in the source bucket and one in the destination bucket.
+The source bucket is the bucket where the file is originally stored. The destination bucket is the bucket where the file is replicated to. The two buckets can be in different AWS Regions or in the same Region.
+CRR is a fully-managed service, so you don't have to worry about managing the replication process. Amazon S3 will automatically replicate the file to the destination bucket as soon as it is written to the source bucket.
+
+SRR - Same region replication
+(lowaggregaton , live replication between test and prod )
+
+AWS cost Allocation reports
+Can apply tags to an S3 bucket , and then do a reporting later on that specific tag = max value of 10 
+
+
+
+AWS storage class analysis
+Storage class analysis in Amazon S3 is a feature that helps you analyze the access patterns of your S3 objects. It provides insights into the object access frequencies and suggests potential cost savings by recommending suitable storage classes for your objects
+
+Storage class analysis in Amazon S3 is a feature that helps you analyze the access patterns of your S3 objects. It provides insights into the object access frequencies and suggests potential cost savings by recommending suitable storage classes for your objects. By analyzing the access patterns, you can make informed decisions about optimizing storage costs based on the frequency of object access.
+
+
+
+
+You can set metrics on the cloudwatch to monitor S3
+can do cloud trail as well on the S3
+can do event notification on the S3 as well and obvoiusly an action on that process is called lambda
+
+
+Access Management
+can be managed by IAM
+
+ACL : ACLs applied on the objects
+
+Bucket policies : to configure permission for all objects within a single bucket. Those are not your global S3 policies . There are more granular based on a specific bucket . This is reource based policy.
+The policies that you create on IAM is for all buckets collectively. This is for a specific user. Also used for cross account access
+
+Principal : the account or user to apply the policy to 
+actions: set of API to allow or deny e.g Get object
+Effect: allow or deny
+
+Example : Public Access - use bucket policy because you can not define an IAM policy for this
+Create a bucket policy to view objects , attach bucket policy to the 
+
+Example: User to Access S3
+create IAM policy for the IAM user
+
+Example EC2 acces 
+Createa  a new EC2 instance role with IAM permission 
+
+Cross-Account-Access
+Create bucket polcy for the bucket to include cross account access
+
+
+
+Object Access Control list (Object ACL) -> They define access permissions for specific objects, allowing you to control who can read, write, or delete each object.
+Bucket ACL 
+Bucket ACLs are applied at the bucket level.
+They determine the default access permissions for all the objects within a bucket.
+Bucket ACLs can be used to control who can perform operations on the bucket, such as listing objects, uploading new objects, or deleting objects.
+When an object is uploaded to a bucket, it inherits the default access permissions defined by the bucket's ACL.
+
+
+
+
+
+Presigned URL 
+A URL or something against an object that gets expired after a spefic length of time but this is not your public URL
+Presigned URL in AWS, you can generate a time-limited link that allows someone to access a file in your S3 bucket without requiring them to have AWS credentials. The URL is like a temporary key that provides secure access to the file for a limited time period.
+
+
+Audit logs
+These are a sort of trails but for a specific bucket only 
+
+
+VPC endpoint
+A VPC endpoint is a private connection that allows resources within your VPC to securely access AWS services without going through the public internet. It acts as a direct entry point from your VPC to the specific AWS service, bypassing the need for internet connectivity.
+This is the use case for two resources to communicate between two resources
+A sort of connection between two services privately 
+
+
+S3 will automatically encrypt
+
+options
+SSE-S3 amazon S3 will encrypt the data at rest and manager the encryption keys
+SSE-C the same with customer provided keys
+SSE-KMS with amazon KMS : encryption with amazon provided keys
+
+
+S3 inventory
+inventory pull out for all your resources and where they are , in a CSV or ORC 
+
+Amazon Macie
+Amazon Macie is a service provided by Amazon Web Services (AWS) that uses advanced machine learning algorithms to automatically discover, classify, and protect sensitive data such as personally identifiable information (PII), credit card numbers, or intellectual property. 
+
+This does it by discover , classify and protect method
+
+
+S3 select:
+S3 Select is a feature provided by Amazon S3 that enables you to retrieve a specific portion of data from an object (file) stored in S3, instead of downloading the entire file. It's like searching for a specific sentence or paragraph in a book without having to read the entire book.
+
+
+Transfer Acceleration (not enabled by default)
+S3 Transfer Acceleration = When you upload or download a file, your data is automatically routed through the nearest edge location.
+
+Lifecycle Rule:
+Exactly as intellegent Tiering but the only difference is that days and class storages are configured manually to be changed
+
+
+
+CORS (cross origin resource sharing) (need to study) (Need to confirm with Rafay)
+Let's say you have an S3 bucket named "my-bucket" where you store various files, such as images and documents. You have two websites: "example.com" and "mywebsite.net," each hosted on different domains.
+
+To allow "example.com" and "mywebsite.net" to access resources in your "my-bucket" S3 bucket, you would configure CORS rules on the bucket and specify the allowed origins as "example.com" and "mywebsite.net". This allows both domains to make cross-origin requests to access resources in the same S3 bucket.
+
+So, different domains can be granted access to the same S3 bucket by configuring CORS rules, enabling those websites to interact with the resources (files) stored in the bucket.
+
+
+
+Cloud Front
+Basically a CDN that uses edge locations to get you data faster
+
+
+1. Devaloper puts the data into origion (can be any source , server or bucket)
+2. Devaloper creates a web distribution
+3. Devaloper gets a link
+4. Link gets shared to end use
+
+
+Version updating is automatically cashed at location. That means you can keep changing the object in the origin
+
+
+Origin can be another AWS service as well.
+Origin Failover: in case your origin fails off , the user can still be served via an edge location that has the last cache
+Regional edge cache: another hope in the caching train. just to speed stuff up
+
+
+
+
+
+Questions:
+
+To an S3, folders don't really exist or do they?
+what are object keys and prefix?
+what is meant by a multi-part upload ? is it for file size above 5TB?
+What is a cloud front signed URL?
+is S3 bucket not always encrypted?
+
+
+
+
+
+<> Cloud Watch
+
+For createing matrics on the resources
+This is a regional service : Will only work on statistics for the region itself is in.
+but multiple attributes from different regions can be pinned in the dashboard 
+Dashboard is not free  and is global
+
+Basic monitoring is free , which is near real-time
+Detailed monitoring is not free , and can work on 1 min refresh rate as well
+
+
+Collect: Allows to collect logs from resources and applications
+Need to install log agent on the resource
+
+Monitor: visualize your cloud resources and applications in unified view   
+Act
+Event Bridge or action on an event
+
+
+
+
+
+
+
+
+Cloud Wathch monitoring Actions
+
+1 Auto scaling
+2 SNS (simple notification )
+3 EC2 Action
+4 System Manager Ops Center (system related )
+
+
+Metric
+
+Namespace = name of the service (EC2 or Autoscaling , ELB etc)
+Dimention: is a name/value pair that yu uniquely identify a metric e.g goup name etc.
+Time Stamp : specific time interval where data points exist (X-axis of the graph)
+Units: Data point value at a specific time interval (y-axis of the graph)
+
+Renetition
+data points for 60 second internval data is available for 3 hours
+data points for a period of 1 min internval available for 15 days
+data points less than 5 min internval data is available for 63 days
+data points less than 1 hour internval data is available for 455 days
+
+
+The data is not lost but instead aggregate. E.g after 3 hours , the data is merged with data that you see in 1 min
+
+
+<> VPC
+Virtual private cloud
+virtual network on the AWS - you decide your addresses / subnet etc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
