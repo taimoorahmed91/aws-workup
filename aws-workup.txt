@@ -453,10 +453,20 @@ data points less than 1 hour internval data is available for 455 days
 
 The data is not lost but instead aggregate. E.g after 3 hours , the data is merged with data that you see in 1 min
 
-
 <> VPC
 Virtual private cloud
 virtual network on the AWS - you decide your addresses / subnet etc
+by default there is one 
+
+Components
+
+1) CIDR Block
+2) Subnet
+3) Gateways
+4) Route Table
+5) Network ACL (NACLs)
+6) Security Grop
+
 
 
 
