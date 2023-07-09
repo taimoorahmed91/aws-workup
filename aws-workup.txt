@@ -453,14 +453,16 @@ data points less than 1 hour internval data is available for 455 days
 
 The data is not lost but instead aggregate. E.g after 3 hours , the data is merged with data that you see in 1 min
 
+
 <> VPC
+Regional resource 
 Virtual private cloud
 virtual network on the AWS - you decide your addresses / subnet etc
 by default there is one 
 
 Components
 
-1) CIDR Block
+1) CIDR Block (multiple can be added using the secondary option) - maximum is a /16
 2) Subnet
 3) Gateways
 4) Route Table
@@ -469,9 +471,18 @@ Components
 
 
 
+Benefits 
+- Easy to use
+- no additional changes 
 
+Data can move from VPC to S3 but would need a VPC endpoint
+Amazon (Elastic IP) - your public static IP - is billed even when the resource is powered off. Will still be billed until removed from account
+not using an IP address but keeping it with you = IP address parking 
+Public IP - also public but dynamic
 
-
+VPC - Peering
+communication between two different VPC (this is not depenedent of region or accounts)
+Intra region is not paid everything else is 
 
 
 
