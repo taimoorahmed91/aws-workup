@@ -482,6 +482,8 @@ Public IP - also public but dynamic
 
 VPC - Peering
 communication between two different VPC (this is not depenedent of region or accounts)
+Intra region , Cross Region , Cross Account
+
 Intra region is not paid everything else is 
 
 VPN = Site to SITE or dialup VPN
@@ -495,7 +497,7 @@ Availability zones have Subnets for that region
 Subnets can not span to a different Availability zones
 to move a machine to a different AZ you would need to move it to a different VPC as well
 
-Route table is not for a subnet but the entire CIRD together
+Route table is not for a subnet but the entire CIDR together
 igw-id = internet gateway ID
 vgw-id = virtual private gateway ID
 
@@ -551,8 +553,11 @@ max 4 secondary IP per VPC
 
 
 
+What is Tenancy in VPC?
+Default vs Dedicated?
 
 
+Resource-based name (RBN) vs IP address-based naming (IPBN) ?
 
 
 
