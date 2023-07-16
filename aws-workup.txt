@@ -610,7 +610,7 @@ a sepatate access management can be maintained
 Elastic Volume (can only increase not decrease) can be modified on the fly
 
 
-IOPS = number of read write on the volume 16000
+IOPS = number of read write on the volume 16000 this 1:4 to the size of your storage e.g if you have 34 GB of memory you will get 102 IOPs
 Throughput = total amount of traffic that can pass through e.g 1000 MiB/s
 Volume = 1G to 16TB
 
@@ -643,19 +643,16 @@ Create AMI & Snapshot.
 Create Lifecycle Policy
 Create EC2 Template 
 
+Placement Group = Allows you to launce instances physically near each other 
+
+AMI vs Snapshot?
+
+AMI = image when you need a bootable image backup
+Snapshot = a Snapshot is normally created of an additional storage that can be attached to some other service , 
+a volume or an AMI can be created from a snapshot. A snapshot can be publicly or account shared as well.
+
+A template is just a pre checked pointers e.g subnet and machine type etc so you can just click "launch" and the config template that you had used before 
+This is most used in load balancing or in case of auto  scaling because you will need the new machines to have the exact same specs 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+In simple terms, an AMI is used to create a new virtual server from scratch, while a snapshot is used to make a copy of the data on a volume attached to an existing server.
