@@ -554,10 +554,77 @@ max 4 secondary IP per VPC
 
 
 What is Tenancy in VPC?
-Default vs Dedicated?
+the hardware that my resource would be located on whould be Dedicated for me or shared
+
+
+Default vs Dedicated ?
 
 
 Resource-based name (RBN) vs IP address-based naming (IPBN) ?
+
+NAT instance works in such a way that it is the gateway for the private subnet and it simply nats the traffic and exists
+NAT instance needs to be in public subnet to have a public IP and a default route
+NAT instance needs to be able to work as a transit for clients traffic
+
+
+
+EC2 
+
+the compute engine of th AWS which user a server based method
+The capacity of the EC2 is Flexible (Scale up and down) - Vertical scaling
+User has root access of the entire machine
+Templates are available some are community based , some are AWS based , all available in the marketplace
+virtual machine is called = instancce
+bootable images are placed in the market placed = AMI (amazon machine images) or golden AMI (fresh AMI , panni pack)
+
+Instance Type = The type of sepcfic instance type you need as per your requirements e.g memory optimized etc etc. These are selected in a bundle
+Bundle (CPU , memeory storage etc)
+
+EC2 = stop and start changes the phyiscal hardware everytime 
+EBS Volume = persistant storage class (the memeory in the EC2) = mounted on the EC2 through the network
+EC2 is not a global service
+SG = Security Group is assigned on a EC2
+
+Instance Store Volumnes = Memory that deletes when an instance stops , can be used for buffers , caches , temp data etc.
+Hibernation = pausing a machine or making it sleep (just like a normal PC)
+
+General Prpose
+Compute optimized (for CPU optimized)
+Memory optimized
+Storage optimized
+Accelerated computing (for CPU and Memory hungery apps)
+
+
+AMI = basic image of an OS , which will allow you to change stuff and create your own AMI as well from a base AMI
+AMIs are incremental (e.g an AMI from another AMI will not have the whole volume but a delta only)
+
+AMI uses S3 as root volume
+AMI uses EBS as data volume
+
+EBS are replicated within the same AZ as well 
+EBS (HDD or SDD are available with an Availability of 99.999%)
+EBS (Encryption available for data at rest and data in transit)
+Allows taking snapshots
+a sepatate access management can be maintained
+
+Elastic Volume (can only increase not decrease) can be modified on the fly
+
+
+IOPS = number of read write on the volume 16000
+Throughput = total amount of traffic that can pass through e.g 1000 MiB/s
+Volume = 1G to 16TB
+
+General purpose SSD vs Provisioned IOPS SSD ?
+
+Provisioned IOS SSD = supports multi attach EBS
+To have best value , start with minimum value in General Pupose SSD and if you feel throtling or chocking , move class then 
+(this is on fly)
+
+
+
+
+
+
 
 
 
