@@ -622,8 +622,26 @@ To have best value , start with minimum value in General Pupose SSD and if you f
 
 
 
+On Demand Vs Spot Instance
+
+On Demand = billed per hour or per hour of uptime
+Spot Instance = Resources that were resrved for dedicated or on demand but are not being used but you will need to give up those when the actual customer arrives
+savings Plans : a contract that allows you lower price for up to 72% discoount if you sign a contract for an X number of hours in the years
+Reserved Instance : same as saving plan but you are reserved for an instance type as well e.g T2Micro etc
+Dedicated Hosts: a physical EC2 server 
+
+AWS EC2 machines are billed per second
 
 
+LAB Pending
+
+
+VPC Peering
+VPC Endponint
+
+Create AMI & Snapshot.
+Create Lifecycle Policy
+Create EC2 Template 
 
 
 
