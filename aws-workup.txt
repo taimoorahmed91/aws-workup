@@ -327,10 +327,7 @@ Audit logs
 These are a sort of trails but for a specific bucket only 
 
 
-VPC endpoint
-A VPC endpoint is a private connection that allows resources within your VPC to securely access AWS services without going through the public internet. It acts as a direct entry point from your VPC to the specific AWS service, bypassing the need for internet connectivity.
-This is the use case for two resources to communicate between two resources
-A sort of connection between two services privately 
+
 
 
 S3 will automatically encrypt
@@ -515,7 +512,28 @@ Every subnet has 5 IPs reseved
 
 
 Security Group = is attached to a resource and is valid for instance based. Basically your stateful ACL for your EC2. Has implicit deny at the end which is hidden
-NACL - same as above but this is not stateful and works at subnet level
+hence only supports allow rules 
+all rules are checked before deciding if traffic is allowed because the deny is at the end of code and can not be in between the ACL sequence
+inbound rule = traffic to the EC2 instance
+outboud rule = traffic from the EC2 instance
+
+
+
+NACL - same as above but this is not stateful and works at subnet level (one NACL per subnet)
+if not assigned manually the default NACL is assiged forecfully
+NACL is for in-bound rules and outbound rule separately  (these are stateless)
+rule entries (1-32766) top down ACL matches rule with implicit deny at the end
+Defauly NACL is permit ip any any
+
+Ephermeral Ports : random port numbers my endpoint uses to initiate traffic for the web server etc
+This depends on the type of OS i have
+NACL is per subnet but you can have a single NACL associated with more than 1 subnet
+NACL supports allow and deny rules
+
+
+
+
+
 
 a VPN Gateway is assigned or attached to a subnet in the subnet
 will not work with a different subnet in the same CIDR if they don't have a VPN gateway . obvoiusly can use the jump host logic
@@ -536,21 +554,39 @@ works within a single AZ , need to have multiple GW in multiple AZ to have fault
 resilient within the same AZ Only
 
 
+VPC endpoint (AWS PrivateLink)
+They are redundant and scale horizontally
+A VPC endpoint is a private connection that allows resources within your VPC to securely access AWS services without going through the public internet. It acts as a direct entry point from your VPC to the specific AWS service, bypassing the need for internet connectivity.
+This is the use case for two resources to communicate between two resources
+A sort of connection between two services privately 
+normally EC2 -> NAT GW -> IGW -> Amazon SNS
+
+
+Interface Endpoint - elastic network interface , creates a network interface dedicatedly with that service. 
+Traffic does not go to gateway , exisits the newly created interface (must use a Security group since a new network interface is introducted) 
+Cost per hour and per GB of data processed
 
 
 
-Interface Endpoint - elastic network interface , creates a network interface dedicatedly with that service. Traffic does not go to gateway , exisits the newly created interface
-Gateway Endpoint - entry in a route table to access services outside
+
+Gateway Endpoint - entry in a route table to access services outside supports S3 and Dynamo DB at the moment (free)
+Better to use gateway endpoint for VPC to S3 but better to use Interface Endpoint between S2S VPN or Direction Connect to S3
+
 Gateway load balancer endpoint - routes traffic to a GLB
 
 
 VPC Peering
-For communication between two different VPC
+For communication between two different VPC (can be in same/different account or in same/different regions)
 Limitation 
 1) overlapping CIDR
 2) Transitive peering (A is peer to B and B is peer to C) A will not communicate to C
 3) edge to edge (gateway communication will not use the peer link)
 
+
+Referencing a security group in a peer VPC means that you can specify the security group ID from the other VPC when defining the inbound or outbound rules in a security group. This allows you to control and regulate the traffic flow between instances in different VPCs using the familiar security group rules.
+
+By referencing a security group in a peer VPC, you can simplify network security management and ensure consistent security policies across multiple VPCs. 
+It allows you to define and manage access rules between VPCs in a centralized manner using security groups, providing granular control over the communication between instances in different VPCs while maintaining a secure network environment.
 
 Reachability Analyzer : static configuration analysis tool , that tells you the hop by hop by Detailed
 VPC Traffic monitoring : basically your mirroring to use wireshark later
@@ -585,6 +621,8 @@ Pre configured linux AMI available for NAT instance
 reached end of support on december 31 , 2020
 not highly available: You would need to create an ASG in multi-AZ + resilient user-data script
 Inernet traffic bandwidth depends on EC2 instance type
+
+
 
 
 
