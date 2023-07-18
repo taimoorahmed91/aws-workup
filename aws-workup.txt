@@ -455,6 +455,7 @@ The data is not lost but instead aggregate. E.g after 3 hours , the data is merg
 
 
 <> VPC
+max limit per region = 5 (soft limit can be increased)
 Regional resource 
 Virtual private cloud
 virtual network on the AWS - you decide your addresses / subnet etc
@@ -501,7 +502,10 @@ Route table is not for a subnet but the entire CIDR together
 igw-id = internet gateway ID
 vgw-id = virtual private gateway ID
 
-Bestian host = Jump server in amazon
+Bestian host != Jump server in amazon
+jump host = a landing server within the corporate access for corporate employees who are also on some company LAN 
+bastion host = a landing server for people on the internet to use some service on the private network of some company , not for managing stuff
+
 Every subnet has 5 IPs reseved
 1) network address  10.0.0.0/24
 2) The first IP is reserved for the gateway 10.0.0.1/24
@@ -522,6 +526,17 @@ Since it is doing PAT , no can make a connection to your private machine or reso
 
 public NAT gateway - PAT
 private NAT gateway - for S2S VPN in case your IP overlaps with your partner
+NAT gateway =  AWS managed NAT, higher bandwidth , high Availability not administration
+NAT gateway must be in a different subnet then the one who is being natted so (private subnet -> NAT Gateway -> IGW)
+pay per hour of usage and bandwidth
+createad in a specific AZ and uses an elastic IP
+initially 5G bandwidth scaling upto 45 Gbps
+no security group to managed
+works within a single AZ , need to have multiple GW in multiple AZ to have fault tolerance
+resilient within the same AZ Only
+
+
+
 
 
 Interface Endpoint - elastic network interface , creates a network interface dedicatedly with that service. Traffic does not go to gateway , exisits the newly created interface
@@ -545,7 +560,7 @@ Network Firewall: Amazon's own firewall , can do IPS and IDS as well
 
 
 Max VPC per region = 5
-max 4 secondary IP per VPC
+max 4 secondary IP per VPC (min is /28 - max is /16)
 200 subnet per amazon VPC
 5 elastic IP address per AWS account per region
 10 hardware connection per amazon VPC
@@ -565,6 +580,13 @@ Resource-based name (RBN) vs IP address-based naming (IPBN) ?
 NAT instance works in such a way that it is the gateway for the private subnet and it simply nats the traffic and exists
 NAT instance needs to be in public subnet to have a public IP and a default route
 NAT instance needs to be able to work as a transit for clients traffic
+
+Pre configured linux AMI available for NAT instance
+reached end of support on december 31 , 2020
+not highly available: You would need to create an ASG in multi-AZ + resilient user-data script
+Inernet traffic bandwidth depends on EC2 instance type
+
+
 
 
 
