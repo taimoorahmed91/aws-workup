@@ -575,6 +575,12 @@ Better to use gateway endpoint for VPC to S3 but better to use Interface Endpoin
 Gateway load balancer endpoint - routes traffic to a GLB
 
 
+AWS PrivateLink can be used to create VPC endpoints for AWS services, as well as for connecting to services provided by AWS partners. 
+It provides a consistent and secure way to access both AWS and third-party services from within your VPC.
+
+To summarize, VPC endpoints are specific instances that enable private access to AWS services from your VPC, while AWS PrivateLink is the underlying technology that facilitates secure and private connectivity between your VPC and AWS services or AWS partner services.
+
+
 VPC Peering
 For communication between two different VPC (can be in same/different account or in same/different regions)
 Limitation 
@@ -646,7 +652,14 @@ EC2 is not a global service
 SG = Security Group is assigned on a EC2
 
 Instance Store Volumnes = Memory that deletes when an instance stops , can be used for buffers , caches , temp data etc.
+This is ephemeral storage , which is the storage of the hardward on which your machine is on
+used for better IO performanace 
+This comes attached to a specific type of instance only and can not be attached to an instance with an EBS 
+
+
 Hibernation = pausing a machine or making it sleep (just like a normal PC)
+Stop Instance = when you stop an instance it is detached from the phyiscal hardware and 
+when you turn it on it might go on to a different bare metal (host)
 
 General Prpose
 Compute optimized (for CPU optimized)
@@ -656,10 +669,15 @@ Accelerated computing (for CPU and Memory hungery apps)
 
 
 AMI = basic image of an OS , which will allow you to change stuff and create your own AMI as well from a base AMI
-AMIs are incremental (e.g an AMI from another AMI will not have the whole volume but a delta only)
+AMI snapshot are incremental (e.g an AMI snapshot from another AMI will not have the whole volume but a delta only)
+first snapshot is the whole snapshot (e.g 8GB) and the second snapshot is the only the delta (e.g 1 GB)
+
+if you delete the first snapshot it will first copy the data into the second snapshot before deleting the orignal snapshot
+so now your second snapshot will be 9 GB
 
 AMI uses S3 as root volume
 AMI uses EBS as data volume
+
 
 EBS are replicated within the same AZ as well 
 EBS (HDD or SDD are available with an Availability of 99.999%)
@@ -693,15 +711,7 @@ Dedicated Hosts: a physical EC2 server
 AWS EC2 machines are billed per second
 
 
-LAB Pending
 
-
-VPC Peering
-VPC Endponint
-
-Create AMI & Snapshot.
-Create Lifecycle Policy
-Create EC2 Template 
 
 Placement Group = Allows you to launce instances physically near each other 
 
@@ -716,3 +726,84 @@ This is most used in load balancing or in case of auto  scaling because you will
 
 
 In simple terms, an AMI is used to create a new virtual server from scratch, while a snapshot is used to make a copy of the data on a volume attached to an existing server.
+
+<> EC2 Image Builder
+
+Used for creating or modifying or automating the creation of custom AMI from a golden AMI
+Steps:
+Provide a base image
+select a software of installation
+select and run tests
+distribute images to selected regions
+
+Automates pipeline to keep images up to date
+allows sharing within an account or cross account
+supports EC2 and containers as well
+
+<> ELB (Elastic Load balancer)
+Binding is based on endpoint
+used with EC2
+exactly what it sounds like (just a plain old LB that distributes traffic between multiple VM in multiple AZ)
+taget groups are called a group of compute machines but they need to be in the same AZ
+ targets are called machines where the traffic is suppose to land
+
+
+health check - can monitor a node or target to check if they are healty and can receive traffic
+Security - Certificate can be bound on the LB and internally without encryption can be flowed
+ELB can do an SSL offload as well
+
+classis load balancer will handle ip based traffic load balancing only
+can do sticky persistancy 
+
+
+Application load balancer works on application basis 
+can have multi instance groups and policies can be defined as per listner rules
+
+Network loadbalancer
+binding is based on transport level (TCP and UDP)
+
+GLB (gateway load balancer)
+binding is based on IP address only
+works with VPC endpoints 
+
+<> Auto scaling
+
+desired capacity - start with two
+minimum capacity - should have at least this many
+maximum capacity - do not exceed with this
+
+
+changing the specs of a machine is called vertical scaling
+adding more instance is called horizontal scaling
+
+alters the horizontal scaling as per metrics set previously
+auto scaling and loadbalancer are better to be used in combination but are independt of each other.
+if working with ELB it will also add the new ec2 in the load balancer
+
+scale out - increase number of machines
+scale in - restore to original number
+
+terminates un-healthy interface and brings up a new healthy one = this is auto healing
+
+launch configuration = a template of the auto scaling , here is where you need to define how do you want to scale up e.g AMI type , Security group etc.
+
+launch config vs template?
+
+life cycle hooks = actions into an instance before it goes into service or after it goes into termantion 
+
+target tracking = increase or decrease capacity of the group based on this value for a specific metric
+step scaling - how many instances to increase when thresholds exceed e.g increase 2 instance per step
+simple scaling - what we have been doing for now
+scheduled scaling - schedule and up-scale or down-scale
+predictive scaling - use machine learning to schedule the right number of instance and inticpate approaching traffic
+
+
+
+
+
+
+
+LAB Pending
+Create AMI & Snapshot.
+Create Lifecycle Policy
+Create EC2 Template 
