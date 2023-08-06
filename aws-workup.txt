@@ -884,16 +884,121 @@ Simple queue Serivce
 it's a type of buffer or temp repository of messages
 producres produces a message to send to consumer (your consumer is your consumer of the request which is actually doing the compute or process on your message)
 with SQS this becaomes a tightly copuled architecture
-
+message locking - if a message is being processed by a process it is locked and can not be consumed if timedout , it is picked up by another consumer
 message queueing service = something like a middleware
 just a middleware that holds messages and builds a queue before forwarding it to the processor or some other sort of service
 if the same message keeps coming from the producer but it is not being catered , it can be sent to a different queue called DLQ 
 this helps your compute or your consumer for additional requests are continous and can not be processed 
 once the consumer picks up the message a back visibility timeout is set for it so another consumer does not pick it up to process
 e.g a video upload system and a process of creating a thimbnail could use this
+Wehn a part of the system fails , the process does not fail because the SQS is still holding the messages even if the consumers are all busy or have failed
 
-long polling vs short polling 
+long polling vs short polling  (need to study)
+back visibility timeout (need to study)
 long polling - picks up message for a lnger time and picks up a 
+
+SQS types
+
+Standard - offers max throughtput , best offort ordering - atleaset-once-delivery - creates duplication as well and sequencing can be mixed
+FIFO- messages are processed exactly once and in the exact order they are sent - message size can contain upto 256 KB of data and each 64KB chunk is considered 1 payload
+
+DLQ 
+(dead letter queue)
+handled messages that have not been successfully processed by a consumer
+when the max receive count is exceeded for a message it will be moved to DLQ assosiated wit the oringal queue
+user can setup a sepatate consumer for the DLQ
+DLQ must be of the same type as of the source queue (standard of FIFO)
+
+<> SNS
+Simple notification service
+works on - published and subscribed method
+publisher - the one who creates a notification
+subscriber - the one who is supposed to receive the notification - can be a service as well
+basically to de-couple message publishers and subsribers
+Can do a push notification as well to mobile as well as to MAC IS desktop and VOIP apps
+can send to an individual group or a subset of users as well
+
+works will all AWS services basically 
+
+<> Dynamo DB
+saved in atleast 3 different DC
+difference between relational and non relational
+no SQL DB -  non-relational database. or structureless
+multi-region and multi-master DB with single digit msec latency
+part of a managed service (AWS manages the CPU and memory etc)
+The data is stored in multiple drives and gets re-partioned automatically
+pay per read and write capacity unit
+works on horizontal scaling
+allows creation of multi valued attributes
+basically one column can have more than one value in it
+so first row in first column can have 3 values
+and second row in first column can have 5 values
+
+
+<> DAX - Amazon DynamoDB Accelerator
+fully managed but in-memory cache
+can speed time upto 10x times
+
+supports key-value and document data model support
+document data model support - data can be stored in a JSON format data as well
+
+Streams - tracks changes in the DB as well
+Global Tables - multi region and multi master . e.g no master slaves but instead a master-master config
+
+PITR - Point in time recovery - when enabled maintains incremental backups of last 35 days 
+automated DB backups
+
+On-demand backup and restore - should be self explained 
+User initiated backup 
+
+Adaptive capacity
+the read and write capacity that was fixed in start will be fixed but if you do not know that value 
+
+
+Auto scaling
+automatic scaling - if load comes go to that value of read write capacity
+this is a gradual increase , means when the traffic comes then increase it
+
+TTL - 
+Data expires and deletes when this time to live occurs
+
+On-Demand capacity mode
+if workload hits a new peak , DynamoDB addapts rapidly to accomodate the workload (read-write capacity unit)
+This is a max possible of the region , you will be get charged for the value you use
+
+
+Difference between auto scaling and on-demand capacity mode once more please? - need to study
+
+change tracking with triggers
+integrates with Lambda to provide triggers - basically execute some lambda fuction when DB changes are made
+
+RCU and WCU
+read capacity unit - one read request for upto 4KB in size
+write capacity unit - one write request is one write item for upto 1 KB in size
+
+what is a partition key?
+primary key = partition key
+
+partition key and sort key - those two are combined a re composite key
+this is using two primary keys - one will be used for ID and one would be used for sorting - this is called composed key
+
+<> RDS
+Relational Database Service
+just your normal SQL based database
+your releational Database (e.g mySQL)
+works on vertifical scaling
+
+Managed by AWS itself - patching and licensing but you are charged
+
+push button compute scaling - user can scale memory and compute upto a max of 128vCPU and 406 GiB of memory
+easy storage scaling - hard drive auto scaling
+read replicas - a slave node can be created that will serve read request only
+can be promoted to master as well
+can have 5 of those
+
+Multi az deployments - standby (not an active one) DB in differnt AZ not a different region
+
+
 
 
 
@@ -901,3 +1006,5 @@ LAB Pending
 Create AMI & Snapshot.
 Create Lifecycle Policy
 Create EC2 Template 
+SQS
+SNS
